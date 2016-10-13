@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.5)
 project(DebtC)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+include_directories(/home/rmnsv/Prog/boost_1_61_0 /home/rmnsv/mysql-connector-c++-1.1.7-linux-glibc2.5-x86-64bit/include/ /home/rmnsv/mysql-connector-c++-1.1.7-linux-glibc2.5-x86-64bit/include/cppconn /home/rmnsv/mysql-connector-c++-1.1.7-linux-glibc2.5-x86-64bit/lib)
+link_directories(/home/rmnsv/mysql-connector-c++-1.1.7-linux-glibc2.5-x86-64bit/lib/)
 
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp handler.cpp database.cpp de.cpp html.cpp database.h)
 add_executable(DebtC ${SOURCE_FILES})
+target_link_libraries(DebtC mysqlcppconn)
+

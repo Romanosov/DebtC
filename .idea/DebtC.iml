@@ -2,8 +2,13 @@
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/html.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/de.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/database.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/handler.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/database.cpp" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
@@ -13,12 +18,18 @@
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include" />
           <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
+          <root url="file://$USER_HOME$/mysql-connector-c++-1.1.7-linux-glibc2.5-x86-64bit/lib" />
+          <root url="file://$USER_HOME$/mysql-connector-c++-1.1.7-linux-glibc2.5-x86-64bit/include" />
+          <root url="file://$USER_HOME$/Prog/boost_1_61_0" />
         </CLASSES>
         <SOURCES>
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include" />
           <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
+          <root url="file://$USER_HOME$/mysql-connector-c++-1.1.7-linux-glibc2.5-x86-64bit/lib" />
+          <root url="file://$USER_HOME$/mysql-connector-c++-1.1.7-linux-glibc2.5-x86-64bit/include" />
+          <root url="file://$USER_HOME$/Prog/boost_1_61_0" />
         </SOURCES>
       </library>
     </orderEntry>
