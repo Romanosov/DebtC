@@ -5,7 +5,9 @@
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/html.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/handler.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/de.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/de.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/database.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/handler.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/database.cpp" isTestSource="false" />

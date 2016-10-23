@@ -7,30 +7,25 @@
 #include <cppconn/statement.h>
 #include <stdlib.h>
 #include "database.h"
+#include "de.h"
 
 using namespace std;
 using namespace sql::mysql;
 
-struct subj {
-    int subj_id;
-    bool has_data;
-    bool complete;
-    short points;
-    long long complete_time;
-};
-
-struct stud_row {
-    int student_id;
-    int position;
-    std::string name;
-    std::string group;
-    subj results[20];
-    int color;
-};
-
 int main() {
     std::cout << "Hello, World!" << std::endl;
     int q_id;
+
+    cout << "DB data get test." << endl << "login:" << endl;
+    string de_login;
+    cin >> de_login;
+    cout << "password:" << endl;
+    string de_pass;
+    cin >> de_pass;
+    cout << de_data_get(de_login, de_pass) << endl;
+    cout << "**********************************************" << endl;
+    cout << "DB test. Enter subject ID of 5 term." << endl;
+
     do {
         cin >> q_id;
         string qu = std::to_string(q_id);
