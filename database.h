@@ -6,6 +6,7 @@
 #ifndef DEBTC_DATABASE_H
 #define DEBTC_DATABASE_H
 
+
 #include "handler.h"
 
 std::string test_query(std::string query);
