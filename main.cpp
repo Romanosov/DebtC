@@ -10,6 +10,7 @@
 #include "database.h"
 #include "de.h"
 #include "handler.h"
+#include "html.h"
 
 using namespace std;
 using namespace sql::mysql;
@@ -36,8 +37,8 @@ int main(int args_c, char* args[]) {
             return 0;
         } else if (bot_or_not == "test") {
             cout << "This is a test. Get ready." << endl;
-            de_lg = "";
-            de_ps = "";
+            de_lg = "191776";
+            de_ps = "mag080497";
         } else {
             cout << "Wrong arg, try \"bot\"." << endl;
             return 0;
@@ -60,7 +61,8 @@ int main(int args_c, char* args[]) {
     //cout << json_data << endl;
     cout << "**********************************************" << endl;
     cout << "2. JSON parsing test." << endl;
-    print_student_marks_default(parse_default(json_data));
+    //print_student_marks_default(parse_default(json_data));
+    html_create_test(parse_default(json_data), 3);
     cout << "**********************************************" << endl;
     cout << "3. DB test. Enter subject ID of 5 term." << endl;
 

@@ -12,6 +12,12 @@
 using namespace std;
 using namespace sql::mysql;
 
+MySQL_Driver *driver;
+sql::Connection *con;
+sql::Statement *stmt;
+sql::ResultSet *res;
+string got_data;
+
 string test_query(string query) {
     MySQL_Driver *driver;
     sql::Connection *con;
@@ -40,28 +46,34 @@ string test_query(string query) {
     return tgot;
 };
 
-bool ctdd_connect() {
-
-    return true;
+bool ctdd_connect(string hostname, int port, string db_login, string db_password) {
+    driver = sql::mysql::get_driver_instance();
+    //con = driver->connect("tcp://127.0.0.1:3306", "root", "");
+    con = driver->connect(hostname + ":" + to_string(port), db_login, db_password);
+    //con = driver->connect("localhost:3306", "u18489_public", "ctdd_public");
+    stmt = con->createStatement();
+    return con != nullptr;
 };
 
 bool ctdd_disconnect() {
-
+    delete stmt;
+    delete con;
+    delete res;
     return true;
 };
 
 bool add_student(int st_id, int isu_num, std::string name, int term) {
-
+    res = stmt->executeQuery("");
     return true;
 };
 
 bool add_subject(int term, std::string name, std::string name_short, bool is_exam) {
-
+    res = stmt->executeQuery("");
     return true;
 };
 
-bool add_result(int student_id, int subject_id, short points, long long update_time) {
-
+bool add_result(int student_id, int subject_id, double points, long long update_time) {
+    res = stmt->executeQuery("");
     return true;
 };
 

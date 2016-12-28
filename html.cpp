@@ -1,7 +1,64 @@
 #include <iostream>
 #include <stdio.h>
+#include "handler.h"
+#include <string>
 
 //
 // Created by rmnsv on 19.09.16.
 //
 
+using namespace std;
+
+void html_create_test(std::vector<stud_row> printed, int term) {
+    freopen("test.html", "w", stdout);
+    int total = 0;
+    printf("%s", "<!DOCTYPE html>\n"
+            "<html>\n"
+            "<head>\n"
+            "  <title>DebtC year2014</title>\n"
+            "  <meta charset=\"UTF-8\">\n"
+            "  <link rel=\"stylesheet\" type=\"text/css\" href=\"./style.css\">\n"
+            "</head>\n"
+            "<body>\n"
+            "  <p>DebtC by rmnsv</p>\n"
+            "  <h2><p>3 курс (year2014). 5 семестр (нихуя не пятый, на самом деле).</p></h2>\n"
+            "  <p>В ПРОЦЕССЕ: 162720:00 из 214560:00</p>\n"
+            "  <p>СЕССИЯ: 0:00 из 43200:00</p>\n"
+            "  <p>Последняя успешная сдача: Гончар А. В., Автоматное программирование, 15.01.2016 (NULL), зачёт<br><br></p>\n"
+            "  <table align=\"center\">\n"
+            "  <tbody>\n"
+            "  <tr style=\"border-bottom: 1px solid black;\">\n"
+            "    <th>Место</th>\n"
+            "    <th>Студент</th>\n");
+    for (int i = 0; i < 20; i++) {
+        if (printed[term - 1].results[i].has_data) {
+
+            printf("<th class=\"cell\">%s</th>\n", printed[term - 1].results[i].subj_name.substr(0, 6).c_str());
+            if (printed[term - 1].results[i].points >= 60) {
+                total++;
+            }
+        } else {
+
+        }
+    }
+    printf("%s", "    <th class=\"eq\">=</th>\n"
+            "    <th class=\"time_col\">Время</th>\n"
+            "  </tr>\n"
+            "  <tr>\n"
+            "    <td>1</td>\n"
+            "    <td class=\"stud\">Гончар А. В.</td>\n");
+    for (int i = 0; i < 20; i++) {
+        if (printed[term - 1].results[i].has_data) {
+            pair<char, string> got_mark = get_mark(printed[term - 1].results[i].points, printed[term - 1].results[i].is_exam);
+            printf("<td class=\"subj_%s\">%c</td>\n", got_mark.second.c_str(), got_mark.first);
+        }
+    }
+    printf("    <td>%d</td>\n"
+                   "    <td>0</td>\n"
+                   "  </tr>", total);
+    printf("  </tbody>\n"
+                   "  </table>\n"
+                   "</body>\n"
+                   "</html>");
+    fclose(stdout);
+}

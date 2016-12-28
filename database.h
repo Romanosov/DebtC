@@ -19,7 +19,7 @@ bool add_student(int st_id, int isu_num, std::string name, int term);
 
 bool add_subject(int term, std::string name, std::string name_short, bool is_exam);
 
-bool add_result(int student_id, int subject_id, short points, long long update_time);
+bool add_result(int student_id, int subject_id, double points, long long update_time);
 
 bool add_bot();
 
