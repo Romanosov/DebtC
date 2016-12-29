@@ -10,6 +10,6 @@
 
 size_t writeCallback(char* buf, size_t size, size_t nmemb, void* up);
 
-std::string de_data_get(std::string de_lg, std::string de_ps);
+std::pair<std::string, std::string> de_data_get(std::string de_lg, std::string de_ps);
 
 #endif //DEBTC_DE_H

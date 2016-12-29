@@ -9,10 +9,13 @@
 #include <time.h>
 #include <unistd.h>
 #include <algorithm>
+#include "global.h"
 
 using namespace std;
 
-vector<stud_row> parse_default(string json_data) {
+int yyear;
+
+vector<stud_row> parse_default(string json_data, string student_name) {
     time_t theTime = time(NULL);
     struct tm *aTime = localtime(&theTime);
     vector<stud_row> stud_marks_ready;
@@ -20,7 +23,6 @@ vector<stud_row> parse_default(string json_data) {
     int study_year;
     size_t found = 0;
     int vector_resize_done = false;
-    size_t parse_from = 0;
 
     //cout << json_data << endl;
 
@@ -70,12 +72,15 @@ vector<stud_row> parse_default(string json_data) {
         stud_marks_ready[h++].group = grupp;
         m++;
     }
+
+    _year = terms_data[0].second;
+
     found = 0;
 
         int current_term = 0;
         vector<int> k(terms_amount, 0);
 
-        while (current_term <= 6) {
+        while (current_term <= terms_amount) {
 
             string subj_data;
             size_t found_subj_end = 0;
@@ -99,6 +104,8 @@ vector<stud_row> parse_default(string json_data) {
                 }
                 stud_marks_ready[current_term - 1].term = current_term;
             }
+
+            stud_marks_ready[current_term - 1].name = student_name;
 
             ++k[current_term - 1];
             //cout << k[current_term - 1] << ")" << endl;
@@ -196,6 +203,10 @@ vector<stud_row> parse_default(string json_data) {
     return stud_marks_ready;
 }
 
+int get_year() {
+    return yyear;
+}
+
 bool marks_login_update(vector<stud_row> marks) {
     bool ok = true;
     for (int i = 0; i < marks.size(); i++) {
@@ -274,4 +285,20 @@ pair<char, string> get_mark(double points, bool is_exam) {
             return make_pair('?', "un");
         }
     }
+}
+
+vector<stud_row> sort_by_passes(vector<stud_row> stud_vector, int from, int to) {
+
+}
+
+vector<stud_row> sort_by_marks(vector<stud_row> stud_vector, int from, int to) {
+
+}
+
+vector<stud_row> sort_by_time(vector<stud_row> stud_vector, int from, int to) {
+
+}
+
+void init_term_time(string begin, string end) {
+
 }

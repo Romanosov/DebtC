@@ -37,6 +37,8 @@ int main(int args_c, char* args[]) {
             return 0;
         } else if (bot_or_not == "test") {
             cout << "This is a test. Get ready." << endl;
+            //de_lg = "191793";
+            //de_ps = "fun003";
             de_lg = "191776";
             de_ps = "mag080497";
         } else {
@@ -56,15 +58,21 @@ int main(int args_c, char* args[]) {
     //freopen("results.txt", "r", stdin);
     //string json_data;
     //cin >> json_data;
-    string json_data = de_data_get(de_lg, de_ps);
+    pair<string, string> datas = de_data_get(de_lg, de_ps);
+    string json_data = datas.first;
     //freopen("results.txt", "w", stdout);
     //cout << json_data << endl;
     cout << "**********************************************" << endl;
     cout << "2. JSON parsing test." << endl;
     //print_student_marks_default(parse_default(json_data));
-    html_create_test(parse_default(json_data), 3);
+    //html_create_test(datas.second, parse_default(json_data, datas.second), 3);
+    html_print_term(datas.second, parse_default(json_data, datas.second), 4);
     cout << "**********************************************" << endl;
     cout << "3. DB test. Enter subject ID of 5 term." << endl;
+
+
+    if (ctdd_connect("localhost", 3306, "root", ""))
+        new_student(parse_default(json_data, datas.second), de_lg);
 
     while (q_id != 0) {
         cin >> q_id;

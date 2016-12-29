@@ -20,16 +20,17 @@ struct result_cell {
 
 struct stud_row {
     int student_id;
-    int position;
     int term;
     std::string name;
     std::string group;
     result_cell results[20];
 };
 
+int get_year();
+
 void create_bot();
 
-std::vector<stud_row> parse_default(std::string json_data);
+std::vector<stud_row> parse_default(std::string json_data, std::string student_name);
 
 void print_student_marks_default(std::vector<stud_row> stud_marks);
 
@@ -42,5 +43,11 @@ std::vector<stud_row> stud_vector_no_data(std::vector<stud_row> clean_it);
 std::pair<int, int> date_to_minutes(std::string date);
 
 std::pair<char, std::string> get_mark(double points, bool is_exam);
+
+std::vector<stud_row> sort_by_passes(std::vector<stud_row> stud_vector, int from, int to);
+
+std::vector<stud_row> sort_by_marks(std::vector<stud_row> stud_vector, int from, int to);
+
+std::vector<stud_row> sort_by_time(std::vector<stud_row> stud_vector, int form, int to);
 
 #endif //DEBTC_HANDLER_H
