@@ -26,7 +26,10 @@ struct stud_row {
     result_cell results[20];
 };
 
-int get_year();
+void init_sem_dates();
+
+long long to_minutes(std::string data);
+
 
 void create_bot();
 

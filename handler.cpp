@@ -10,12 +10,49 @@
 #include <unistd.h>
 #include <algorithm>
 #include "global.h"
+#include <ctime>
+#include <chrono>
+#include <cstring>
 
 using namespace std;
 
 int yyear;
 
+pair<string, string> sem_date[10];
+
+void init_sem_dates() {
+    sem_date[0].first = "01.09.2013";
+    sem_date[0].second = "31.01.2014";
+    sem_date[1].first = "08.02.2014";
+    sem_date[1].second = "30.06.2014";
+    sem_date[2].first = "01.09.2014";
+    sem_date[2].second = "31.01.2015";
+    sem_date[3].first = "08.02.2015";
+    sem_date[3].second = "02.07.2015";
+    sem_date[4].first = "01.09.2015";
+    sem_date[4].second = "31.01.2016";
+    sem_date[5].first = "08.02.2016";
+    sem_date[5].second = "30.06.2016";
+    sem_date[6].first = "01.09.2016";
+    sem_date[6].second = "31.01.2017";
+    sem_date[7].first = "06.02.2017";
+    sem_date[7].second = "30.06.2017";
+}
+
+long long to_minutes(string data) {
+    std::tm tm = {};
+    char * ff;
+    data += " 18:23:00.000000";
+    strcpy(ff, data.c_str());
+    const char* snext = ::strptime(ff, "%d.%m.%Y %H:%M:%S", &tm);
+    auto time_point = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+    long long  duration_ms = time_point.time_since_epoch() / std::chrono::milliseconds(1) + std::atof(snext);
+    return duration_ms / 10000;
+}
+
 vector<stud_row> parse_default(string json_data, string student_name) {
+    init_sem_dates();
+
     time_t theTime = time(NULL);
     struct tm *aTime = localtime(&theTime);
     vector<stud_row> stud_marks_ready;
@@ -80,6 +117,9 @@ vector<stud_row> parse_default(string json_data, string student_name) {
         int current_term = 0;
         vector<int> k(terms_amount, 0);
 
+        for (int l = 0; l < terms_amount; l++)
+            stud_marks_ready[l].name = student_name;
+
         while (current_term <= terms_amount) {
 
             string subj_data;
@@ -105,8 +145,6 @@ vector<stud_row> parse_default(string json_data, string student_name) {
                 stud_marks_ready[current_term - 1].term = current_term;
             }
 
-            stud_marks_ready[current_term - 1].name = student_name;
-
             ++k[current_term - 1];
             //cout << k[current_term - 1] << ")" << endl;
 
@@ -120,6 +158,7 @@ vector<stud_row> parse_default(string json_data, string student_name) {
                     i++;
                 }
                 stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_name = buffer_string;
+                stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_id = (current_term * 100) + k[current_term - 1];
                 //cout << "NAME: " << stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_name << '\n';
 
                 size_t found_no_data = json_data.find("name", found + 10);
@@ -152,7 +191,8 @@ vector<stud_row> parse_default(string json_data, string student_name) {
                     i++;
                 }
                 if (buffer_string != "") {
-                    //pushed.results[k - 1].complete_time = to_minutes(buffer_string);
+                    stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].complete_data = buffer_string;
+                    stud_marks_ready[current_term -1].results[k[current_term -1]].complete_time = to_minutes(buffer_string) - to_minutes(sem_date[7 - terms_amount + current_term].first);
                     //cout << "DATE: " << buffer_string << endl;
                 }
             }
@@ -209,10 +249,12 @@ int get_year() {
 
 bool marks_login_update(vector<stud_row> marks) {
     bool ok = true;
+    if (!ctdd_connect("localhost", 3306, "root", ""))
+        return false;
     for (int i = 0; i < marks.size(); i++) {
         for (int j = 0; j < 20; j++) {
             if (marks[i].results[j].has_data) {
-                if (!add_result(marks[i].student_id, marks[i].results[j].subj_id, marks[i].results[j].points, marks[i].results[j].complete_time))
+                if (!add_result(5, marks[i].results[j].points, marks[i].results[j].complete_time))
                     ok = false;
             }
         }
@@ -296,9 +338,5 @@ vector<stud_row> sort_by_marks(vector<stud_row> stud_vector, int from, int to) {
 }
 
 vector<stud_row> sort_by_time(vector<stud_row> stud_vector, int from, int to) {
-
-}
-
-void init_term_time(string begin, string end) {
 
 }

@@ -37,10 +37,7 @@ int main(int args_c, char* args[]) {
             return 0;
         } else if (bot_or_not == "test") {
             cout << "This is a test. Get ready." << endl;
-            //de_lg = "191793";
-            //de_ps = "fun003";
-            de_lg = "191776";
-            de_ps = "mag080497";
+            //
         } else {
             cout << "Wrong arg, try \"bot\"." << endl;
             return 0;
@@ -60,19 +57,23 @@ int main(int args_c, char* args[]) {
     //cin >> json_data;
     pair<string, string> datas = de_data_get(de_lg, de_ps);
     string json_data = datas.first;
+    string student_name = datas.second;
+    cout << "1.1. Refreshing the database." << endl;
     //freopen("results.txt", "w", stdout);
     //cout << json_data << endl;
     cout << "**********************************************" << endl;
     cout << "2. JSON parsing test." << endl;
+    if (!marks_login_update(parse_default(json_data, student_name)))
+        cout << "Bad." << endl;
     //print_student_marks_default(parse_default(json_data));
     //html_create_test(datas.second, parse_default(json_data, datas.second), 3);
-    html_print_term(datas.second, parse_default(json_data, datas.second), 4);
+    //html_print_term(datas.second, parse_default(json_data, datas.second), 4);
     cout << "**********************************************" << endl;
     cout << "3. DB test. Enter subject ID of 5 term." << endl;
 
 
-    if (ctdd_connect("localhost", 3306, "root", ""))
-        new_student(parse_default(json_data, datas.second), de_lg);
+    //if (ctdd_connect("localhost", 3306, "root", ""))
+       // new_student(parse_default(json_data, datas.second), de_lg);
 
     while (q_id != 0) {
         cin >> q_id;

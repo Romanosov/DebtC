@@ -70,7 +70,7 @@ bool add_student(int isu_num, std::string name, string group, int term) {
     kk = stoi(res->getString("COUNT(*)"));
     kk++;
     string le_query = "INSERT INTO djournal.students VALUES ('" + to_string(kk) + "', '" + to_string(isu_num) + "', '1', '" + to_string(term) + "', \"" + name + "\", \"" + group +"\");";
-    cout << le_query << endl;
+    //cout << le_query << endl;
 
     stmt->execute(le_query);
     return true;
@@ -90,9 +90,17 @@ bool add_subject(int term, std::string name, std::string name_short, bool is_exa
 }
 
 bool add_result(int student_id, int subject_id, double points, long long update_time) {
-    res = stmt->executeQuery("");
+    int kk;
+    res = stmt->executeQuery("SELECT COUNT(*) FROM djournal.result_cells;");
+    res->next();
+    kk = stoi(res->getString("COUNT(*)"));
+    kk++;
+    //res = stmt->executeQuery("select id from djournal.subjects where subj_name = \"Введение в программирование и ЭВМ\" and term_id = 1;");
+    stmt->execute("INSERT INTO djournal.result_cells VALUES ('" + to_string(kk) + "', '" + to_string(3) + "', '" + to_string(subject_id) + "', '" + to_string(points) + "', '" + to_string(update_time) + "');");
     return true;
 }
+
+
 
 bool add_bot() {
 
