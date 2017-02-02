@@ -34,7 +34,7 @@ void init_sem_dates() {
     sem_date[5].first = "08.02.2016";
     sem_date[5].second = "30.06.2016";
     sem_date[6].first = "01.09.2016";
-    sem_date[6].second = "31.01.2017";
+    sem_date[6].second = "29.01.2017";
     sem_date[7].first = "06.02.2017";
     sem_date[7].second = "30.06.2017";
 }
@@ -50,18 +50,21 @@ long long to_minutes(string data) {
     return duration_ms / 10000;
 }
 
-vector<stud_row> parse_default(string json_data, string student_name) {
+vector<stud_row> parse_default(string &json_data, string student_name) {
+
+    GLOBAL_student_name = student_name;
+
     init_sem_dates();
 
     time_t theTime = time(NULL);
     struct tm *aTime = localtime(&theTime);
     vector<stud_row> stud_marks_ready;
-    string buffer_string;
     int study_year;
+    string buffer_string;
     size_t found = 0;
     int vector_resize_done = false;
 
-    //cout << json_data << endl;
+    cout << json_data << endl;
 
     //cout << json_data[46110] << endl;
 
@@ -74,7 +77,7 @@ vector<stud_row> parse_default(string json_data, string student_name) {
     stud_marks_ready = stud_vector_no_data(stud_marks_ready);
 
     while (m <= terms_amount / 2) {
-        string grupp;
+        string grupk;
         found = json_data.find("group", found);
         if (found != string::npos) {
             buffer_string = "";
@@ -84,7 +87,7 @@ vector<stud_row> parse_default(string json_data, string student_name) {
                 buffer_string += pl;
                 i++;
             }
-            grupp = buffer_string;
+            grupk = buffer_string;
             //cout << "GROUP: " << grupp << endl;
         }
         found = json_data.find("studyyear", found);
@@ -95,30 +98,29 @@ vector<stud_row> parse_default(string json_data, string student_name) {
             }
             study_year = stoi(buffer_string);
             //cout << "YEAR: " << study_year << '\n';
-            terms_data.push_back(make_pair(grupp, study_year));
-            terms_data.push_back(make_pair(grupp, study_year + 1));
+            terms_data.push_back(make_pair(grupk, study_year));
+            terms_data.push_back(make_pair(grupk, study_year + 1));
             if (!vector_resize_done) {
                 int current_year = aTime->tm_year + 1900;
-                terms_amount = (current_year - study_year + 1) * 2;
+                int current_month = aTime->tm_mon;
+                if ((current_month == 0) || (current_month <= 7))
+                    terms_amount = (current_year - study_year) * 2;
+                else
+                    terms_amount = (current_year - study_year + 1) * 2;
                 //cout << "TERMS: " << terms_amount << endl;
                 stud_marks_ready.resize(terms_amount);
                 vector_resize_done = true;
             }
         }
-        stud_marks_ready[h++].group = grupp;
-        stud_marks_ready[h++].group = grupp;
         m++;
     }
 
-    _year = terms_data[0].second;
+    GLOBAL_year = terms_data[0].second;
 
     found = 0;
 
-        int current_term = 0;
-        vector<int> k(terms_amount, 0);
-
-        for (int l = 0; l < terms_amount; l++)
-            stud_marks_ready[l].name = student_name;
+    int current_term = 0;
+    vector<int> k(terms_amount, 0);
 
         while (current_term <= terms_amount) {
 
@@ -139,14 +141,20 @@ vector<stud_row> parse_default(string json_data, string student_name) {
                 int what_term = stoi(buffer_string);
                 if (what_term != current_term) {
                     current_term = what_term;
-                    //cout << terms_data[current_term - 1].first << ", year " << terms_data[current_term - 1].second << endl;
+                    stud_marks_ready[current_term - 1].name = student_name;
+                    stud_marks_ready[current_term - 1].group = terms_data[current_term - 1].first;
+                    stud_marks_ready[current_term - 1].student_id = GLOBAL_students_total + current_term;
+                    cout << endl << terms_data[current_term - 1].first << ", year " << terms_data[current_term - 1].second << endl;
                     continue;
                 }
                 stud_marks_ready[current_term - 1].term = current_term;
             }
 
+
+            //cout << stud_marks_ready[current_term - 1].name << endl;
+
             ++k[current_term - 1];
-            //cout << k[current_term - 1] << ")" << endl;
+            cout << k[current_term - 1] << ")" << endl;
 
             found = json_data.find("name", found);
             if (found != string::npos) {
@@ -158,8 +166,8 @@ vector<stud_row> parse_default(string json_data, string student_name) {
                     i++;
                 }
                 stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_name = buffer_string;
-                stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_id = (current_term * 100) + k[current_term - 1];
-                //cout << "NAME: " << stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_name << '\n';
+                stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_id = get_subj_id(buffer_string, current_term);
+                cout << "SUBJ NAME: " << stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_name << " " << current_term << '\n';
 
                 size_t found_no_data = json_data.find("name", found + 10);
 
@@ -179,6 +187,7 @@ vector<stud_row> parse_default(string json_data, string student_name) {
                     //cout << subj_data << endl;
                 }
             }
+
                 //cout << "TERM: " << current_term << endl;
 
             found_subj = subj_data.find("markdate", found_subj);
@@ -196,6 +205,7 @@ vector<stud_row> parse_default(string json_data, string student_name) {
                     //cout << "DATE: " << buffer_string << endl;
                 }
             }
+
 
             found_subj = subj_data.find("worktype", found_subj);
             if (found_subj != string::npos) {
@@ -215,22 +225,31 @@ vector<stud_row> parse_default(string json_data, string student_name) {
                 }
             }
 
+
             found_subj = subj_data.find("value", found_subj);
+            string bs2;
             if (found_subj != string::npos) {
-                buffer_string = "";
+                bs2 = "";
                 int i = 0;
                 char pl;
-                while ((pl = subj_data[found_subj + 8 + i]) != '\"') {
-                    buffer_string += pl;
+                while (((pl = subj_data[found_subj + 8 + i]) >= '0' && pl <= '9') || (pl == ','))  {
                     i++;
+                    if (pl == ',') {
+                        bs2 += '.' + '\0';
+                    } else {
+                        bs2 += pl + '\0';
+                    }
                 }
-                if (buffer_string != "") {
-                    replace(buffer_string.begin(), buffer_string.end(), ',', '.');
-                    stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].points = stod(buffer_string);
+
+                cout << bs2 << endl;
+                if (bs2 != "") {
+                    stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].points = stod(bs2);
                     //cout << "POINTS: " << stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].points << endl;
                     stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].has_data = true;
+                    bs2 = "";
                 }
             }
+
 
             if (found_subj_end < found)
                 break;
@@ -239,6 +258,9 @@ vector<stud_row> parse_default(string json_data, string student_name) {
             //cout << endl;
         }
     //}
+    cout << "GOT NAME: " << stud_marks_ready[4].name << endl;
+
+    GLOBAL_students_total += terms_amount;
 
     return stud_marks_ready;
 }
@@ -254,7 +276,7 @@ bool marks_login_update(vector<stud_row> marks) {
     for (int i = 0; i < marks.size(); i++) {
         for (int j = 0; j < 20; j++) {
             if (marks[i].results[j].has_data) {
-                if (!add_result(5, marks[i].results[j].points, marks[i].results[j].complete_time))
+                if (!add_result(marks[i].student_id, marks[i].results[j].subj_id, marks[i].results[j].points, marks[i].results[j].complete_time))
                     ok = false;
             }
         }
@@ -262,9 +284,6 @@ bool marks_login_update(vector<stud_row> marks) {
     return ok;
 }
 
-bool marks_login_update_test(vector<stud_row> marks) {
-    return true;
-}
 
 vector<stud_row> stud_vector_no_data(vector<stud_row> clean_it) {
     for (int i = 0; i < clean_it.size(); i++) {

@@ -7,24 +7,8 @@
 
 #include <string>
 #include <vector>
+#include "structs.h"
 
-struct result_cell {
-    int subj_id;
-    bool has_data;
-    std::string subj_name;
-    bool is_exam;
-    double points;
-    long long complete_time;
-    std::string complete_data;
-};
-
-struct stud_row {
-    int student_id;
-    int term;
-    std::string name;
-    std::string group;
-    result_cell results[20];
-};
 
 void init_sem_dates();
 
@@ -33,13 +17,11 @@ long long to_minutes(std::string data);
 
 void create_bot();
 
-std::vector<stud_row> parse_default(std::string json_data, std::string student_name);
+std::vector<stud_row> parse_default(std::string &json_data, std::string student_name);
 
 void print_student_marks_default(std::vector<stud_row> stud_marks);
 
 bool marks_login_update(std::vector<stud_row> marks);
-
-bool marks_login_update_test(std::vector<stud_row> marks);
 
 std::vector<stud_row> stud_vector_no_data(std::vector<stud_row> clean_it);
 

@@ -12,7 +12,7 @@
 using namespace std;
 
 void html_print_term(string name, std::vector<stud_row> printed, int term) {
-    int year = _year;
+    int year = GLOBAL_year;
     string define_filename = "./html/year" + to_string(year) + "_term" + to_string(term) + ".html";
     freopen(define_filename.c_str(), "w", stdout);
     int total = 0;

@@ -5,4 +5,6 @@
 #include "global.h"
 #include "handler.h"
 
-int _year;
+int GLOBAL_year;
+int GLOBAL_students_total;
+std::string GLOBAL_student_name;

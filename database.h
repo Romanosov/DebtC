@@ -23,6 +23,10 @@ bool add_subject(int term, std::string name, std::string name_short, bool is_exa
 
 bool add_result(int student_id, int subject_id, double points, long long update_time);
 
+int how_many_students();
+
+int get_subj_id(std::string subj_name, int term);
+
 bool add_bot();
 
 void bot_update();

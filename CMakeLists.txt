@@ -6,7 +6,7 @@ include_directories(/home/rmnsv/Prog/boost_1_61_0 /home/rmnsv/mysql-connector-c+
 link_directories(/home/rmnsv/mysql-connector-c++-1.1.7-linux-glibc2.5-x86-64bit/lib/)
 
 
-set(SOURCE_FILES main.cpp handler.cpp database.cpp de.cpp html.cpp database.h handler.h de.h html.h global.h global.cpp)
+set(SOURCE_FILES main.cpp handler.cpp database.cpp de.cpp html.cpp database.h handler.h de.h html.h global.h global.cpp structs.h)
 add_executable(debtc ${SOURCE_FILES})
 
 target_link_libraries(debtc mysqlcppconn mysqlcppconn-static curl)

@@ -5,6 +5,10 @@
 #ifndef DEBTC_GLOBAL_H
 #define DEBTC_GLOBAL_H
 
-extern int _year;
+#include <string>
+
+extern int GLOBAL_year;
+extern int GLOBAL_students_total;
+extern std::string GLOBAL_student_name;
 
 #endif //DEBTC_GLOBAL_H
