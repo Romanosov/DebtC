@@ -7,6 +7,7 @@
 #include "mysql_connection.h"
 #include "structs.h"
 #include "handler.h"
+#include "global.h"
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
@@ -58,7 +59,6 @@ bool ctdd_connect(string hostname, int port, string db_login, string db_password
 }
 
 bool ctdd_disconnect() {
-    delete stmt;
     delete con;
     delete res;
     return true;
@@ -68,14 +68,14 @@ bool ctdd_disconnect() {
 bool add_student(int isu_num, std::string name, string group, int term) {
     int kk;
     stmt = con->createStatement();
-    res = stmt->executeQuery("SELECT COUNT(*) FROM djournal.students;");
+    res = stmt->executeQuery("SELECT COUNT(*) FROM " + GLOBAL_db_used + ".students;");
     if (res->next())
         kk = stoi(res->getString("COUNT(*)"));
     else
         return false;
-    cout << "Count OK." << endl;
+    //cout << "Count OK." << endl;
     kk++;
-    prep_stmt = con->prepareStatement("INSERT INTO djournal.students VALUES (?, ?, ?, ?, ?, ?);");
+    prep_stmt = con->prepareStatement("INSERT INTO " + GLOBAL_db_used + ".students VALUES (?, ?, ?, ?, ?, ?);");
     //string le_query = "INSERT INTO djournal.students VALUES ('" + to_string(kk) + "', '" + to_string(isu_num) + "', '1', '" + to_string(term) + "', \"" + name + "\", \"" + group +"\");";
     prep_stmt->setInt(1, kk);
     prep_stmt->setInt(2, isu_num);
@@ -87,7 +87,7 @@ bool add_student(int isu_num, std::string name, string group, int term) {
     prep_stmt->execute();
     delete prep_stmt;
     delete stmt;
-    cout << "Insert student OK." << endl;
+    //cout << "Insert student OK." << endl;
     return true;
 }
 
@@ -112,22 +112,22 @@ bool add_subject(int term, std::string name, std::string name_short, bool is_exa
 bool add_result(int student_id, int subject_id, double points, long long update_time) {
     int kk;
     stmt = con->createStatement();
-    res = stmt->executeQuery("SELECT COUNT(*) FROM djournal.result_cells;");
+    res = stmt->executeQuery("SELECT COUNT(*) FROM " + GLOBAL_db_used + ".result_cells;");
     res->next();
     kk = stoi(res->getString("COUNT(*)"));
     kk++;
     //res = stmt->executeQuery("select id from djournal.subjects where subj_name = \"Введение в программирование и ЭВМ\" and term_id = 1;");
-    string le_query = "INSERT INTO djournal.result_cells VALUES ('" + to_string(kk) + "', '" + to_string(student_id) + "', '" + to_string(subject_id) + "', '" + to_string(points) + "', '" + to_string(update_time) + "');";
-    cout << le_query << endl;
+    string le_query = "INSERT INTO " + GLOBAL_db_used + ".result_cells VALUES ('" + to_string(kk) + "', '" + to_string(student_id) + "', '" + to_string(subject_id) + "', '" + to_string(points) + "', '" + to_string(update_time) + "');";
+    //cout << le_query << endl;
     stmt->execute(le_query);
     delete stmt;
-    cout << "Result add OK." << endl;
+    //cout << "Result add OK." << endl;
     return true;
 }
 int how_many_students() {
     int kk;
     stmt = con->createStatement();
-    res = stmt->executeQuery("SELECT COUNT(*) FROM djournal.students;");
+    res = stmt->executeQuery("SELECT COUNT(*) FROM " + GLOBAL_db_used + ".students;");
     res->next();
     kk = stoi(res->getString("COUNT(*)"));
     return kk;
@@ -135,7 +135,7 @@ int how_many_students() {
 
 int get_subj_id(string subj_name, int term) {
     stmt = con->createStatement();
-    res = stmt->executeQuery("SELECT id FROM djournal.subjects WHERE subj_name = \"" + subj_name + "\" AND term_id = '" + to_string(term) + "';");
+    res = stmt->executeQuery("SELECT id FROM " + GLOBAL_db_used + ".subjects WHERE subj_name = \"" + subj_name + "\" AND term_id = '" + to_string(term) + "';");
     res->next();
     return stoi(res->getString("id"));
 };

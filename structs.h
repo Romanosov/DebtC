@@ -6,6 +6,8 @@
 #define DEBTC_STRUCTS_H
 
 #include <string>
+#include <iostream>
+using namespace std;
 
 struct result_cell {
     int subj_id;
@@ -15,6 +17,12 @@ struct result_cell {
     double points;
     long long complete_time;
     std::string complete_data;
+
+    ~result_cell()
+    {
+        delete [] this;
+        cout << "CELL" << endl;
+    }
 };
 
 struct stud_row {
@@ -23,6 +31,11 @@ struct stud_row {
     std::string name;
     std::string group;
     result_cell results[20];
+
+    ~stud_row() {
+        delete [] this;
+        cout << "?" << endl;
+    }
 };
 
 #endif //DEBTC_STRUCTS_H

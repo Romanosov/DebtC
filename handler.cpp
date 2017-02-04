@@ -64,7 +64,7 @@ vector<stud_row> parse_default(string &json_data, string student_name) {
     size_t found = 0;
     int vector_resize_done = false;
 
-    cout << json_data << endl;
+    //cout << json_data << endl;
 
     //cout << json_data[46110] << endl;
 
@@ -144,7 +144,7 @@ vector<stud_row> parse_default(string &json_data, string student_name) {
                     stud_marks_ready[current_term - 1].name = student_name;
                     stud_marks_ready[current_term - 1].group = terms_data[current_term - 1].first;
                     stud_marks_ready[current_term - 1].student_id = GLOBAL_students_total + current_term;
-                    cout << endl << terms_data[current_term - 1].first << ", year " << terms_data[current_term - 1].second << endl;
+                    //cout << endl << terms_data[current_term - 1].first << ", year " << terms_data[current_term - 1].second << "..." << endl;
                     continue;
                 }
                 stud_marks_ready[current_term - 1].term = current_term;
@@ -154,7 +154,7 @@ vector<stud_row> parse_default(string &json_data, string student_name) {
             //cout << stud_marks_ready[current_term - 1].name << endl;
 
             ++k[current_term - 1];
-            cout << k[current_term - 1] << ")" << endl;
+            //cout << k[current_term - 1] << ")" << endl;
 
             found = json_data.find("name", found);
             if (found != string::npos) {
@@ -167,7 +167,9 @@ vector<stud_row> parse_default(string &json_data, string student_name) {
                 }
                 stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_name = buffer_string;
                 stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_id = get_subj_id(buffer_string, current_term);
-                cout << "SUBJ NAME: " << stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_name << " " << current_term << '\n';
+                //string what_for = stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_name;
+                cout.flush();
+                cout << "\r" << stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].subj_name << " — семестр " << current_term;
 
                 size_t found_no_data = json_data.find("name", found + 10);
 
@@ -241,7 +243,7 @@ vector<stud_row> parse_default(string &json_data, string student_name) {
                     }
                 }
 
-                cout << bs2 << endl;
+                //cout << bs2 << endl;
                 if (bs2 != "") {
                     stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].points = stod(bs2);
                     //cout << "POINTS: " << stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].points << endl;
@@ -257,8 +259,10 @@ vector<stud_row> parse_default(string &json_data, string student_name) {
             found = found_subj_end;
             //cout << endl;
         }
-    //}
-    cout << "GOT NAME: " << stud_marks_ready[4].name << endl;
+
+    //cout << "GOT NAME: " << stud_marks_ready[4].name << endl;
+
+    cout  << "\rGot some data...                                                                                                  " << endl;
 
     GLOBAL_students_total += terms_amount;
 

@@ -7,4 +7,5 @@
 
 int GLOBAL_year;
 int GLOBAL_students_total;
+std::string GLOBAL_db_used;
 std::string GLOBAL_student_name;

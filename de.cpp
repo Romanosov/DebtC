@@ -154,7 +154,7 @@ pair<string, string> de_data_get(string de_lg, string de_ps) {
         name_b = student_name.find("id=\"fio\"") + 21;
         name_e = student_name.find("<", name_b - 2);
         student_name = student_name.substr(name_b, name_e - name_b);
-        cout << "NAME: " << student_name << endl;
+        cout << "Your full name is: " << student_name << endl;
 
         curl_easy_cleanup(ch);
     }
