@@ -91,24 +91,6 @@ bool add_student(int isu_num, std::string name, string group, int term) {
     return true;
 }
 
-bool new_student(vector<stud_row> stud_marks, string isu_num) {
-    cout << "I'M A FUNCKJSLKF" << endl;
-     for (int i = 0; i < stud_marks.size(); i++) {
-        cout << isu_num << endl;
-        cout << stud_marks[i].name << endl;
-        cout << stud_marks[i].group << endl;
-        if (add_student(stoi(isu_num), stud_marks[i].name, stud_marks[i].group, i + 1)) {
-           // marks_login_update_test(stud_marks, 2);
-        }
-    }
-    return true;
-}
-
-bool add_subject(int term, std::string name, std::string name_short, bool is_exam) {
-    res = stmt->executeQuery("");
-    return true;
-}
-
 bool add_result(int student_id, int subject_id, double points, long long update_time) {
     int kk;
     stmt = con->createStatement();
@@ -124,6 +106,64 @@ bool add_result(int student_id, int subject_id, double points, long long update_
     //cout << "Result add OK." << endl;
     return true;
 }
+
+bool new_student(vector<stud_row> &stud_marks, string isu_num) {
+    cout << " ____________________________________________________________" << endl;
+    cout << "|0%_________________________50%__________________________100%|" << endl << "|";
+    size_t tsz = stud_marks.size();
+    size_t tasks_left = tsz * 12;
+    //cout << tasks_left;
+
+    size_t kc = tasks_left;
+    size_t perc = 0;
+    size_t new_perc;
+    string done_progress = "";
+    for (int i = 0; i < tsz; i++) {
+        //cout << tte[i].name << endl;
+        //cout << tte[i].group << endl;
+        if (add_student(stoi(isu_num), stud_marks[i].name, stud_marks[i].group, stud_marks[i].term)) {
+            tasks_left--;
+            new_perc = (kc - tasks_left) * 60 / kc;
+            if (new_perc > perc) {
+                perc = new_perc;
+            }
+            //cout << "TERM " << tte[i].term << endl;
+            for (int j = 0; j < 12; j++) {
+                //cout << "Are we here?" << endl;
+                bool add = stud_marks[i].results[j].has_data;
+                int stud_id = stud_marks[i].student_id;
+                //cout << "STUD ID: " << stud_id << endl;
+                int subj_id = stud_marks[i].results[j].subj_id;
+                //cout << "SUBJ ID: "<< subj_id << endl;
+                double pnts = stud_marks[i].results[j].points;
+                long long int ct = stud_marks[i].results[j].complete_time;
+                //cout << add << " " << stud_id << " " << subj_id << " " << pnts << " " << ct << endl;
+                //cout << "Has?" << endl;
+                if (add) {
+                    //cout << "Has data!" << endl;
+                    if (!add_result(stud_id, subj_id, pnts, ct)) {
+                        return false;
+                    }
+                }
+                tasks_left--;
+                new_perc = (kc - tasks_left) * 60 / kc;
+                if (new_perc > perc) {
+                    perc = new_perc;
+                    cout << "$";
+                    cout.flush();
+                }
+            }
+        }
+    }
+    cout << "|" << endl;
+    return true;
+}
+
+bool add_subject(int term, std::string name, std::string name_short, bool is_exam) {
+    res = stmt->executeQuery("");
+    return true;
+}
+
 int how_many_students() {
     int kk;
     stmt = con->createStatement();
@@ -140,10 +180,65 @@ int get_subj_id(string subj_name, int term) {
     return stoi(res->getString("id"));
 };
 
+int add_bot(int bot_num, int term) {
+    int kk, bb;
+    res = stmt->executeQuery("SELECT COUNT(*) FROM " + GLOBAL_db_used + ".students;");
+    if (res->next())
+        kk = stoi(res->getString("COUNT(*)"));
+    else
+        return false;
+    //cout << "Count OK." << endl;
+    kk++;
+    prep_stmt = con->prepareStatement("INSERT INTO " + GLOBAL_db_used + ".students VALUES (?, ?, ?, ?, ?, ?);");
+    //string le_query = "INSERT INTO djournal.students VALUES ('" + to_string(kk) + "', '" + to_string(isu_num) + "', '1', '" + to_string(term) + "', \"" + name + "\", \"" + group +"\");";
+    prep_stmt->setInt(1, kk);
+    prep_stmt->setInt(2, 0);
+    prep_stmt->setBoolean(3, 0);
+    prep_stmt->setInt(4, term);
+    prep_stmt->setString(5, "Bot #" + to_string(bot_num));
+    prep_stmt->setString(6, "N/A");
+    //cout << le_query << endl;
+    prep_stmt->execute();
+    delete prep_stmt;
+    delete stmt;
+    return kk;
+}
 
-bool add_bot() {
+void create_bot() {
+    stmt = con->createStatement();
+    std::random_device rd;
+    std::default_random_engine gen(rd());
+    std::uniform_int_distribution<int> distr_term(2, 6);
+    int terms = distr_term(gen);
+    int bb;
+    string qr = "SELECT COUNT(*) FROM " + GLOBAL_db_used + ".students WHERE " + GLOBAL_db_used + ".students.is_real = '0';";
+    res = stmt->executeQuery(qr);
+    if (res->next())
+        bb = stoi(res->getString("COUNT(*)"));
+    else
+        return;
+    bb++;
+    int kk;
+    res = stmt->executeQuery("SELECT COUNT(*) FROM " + GLOBAL_db_used + ".result_cells;");
+    res->next();
+    kk = stoi(res->getString("COUNT(*)"));
 
-    return true;
+    for (int i = 1; i <= terms; i++) {
+        int id = add_bot(bb, i);
+        stmt = con->createStatement();
+        res = stmt->executeQuery("SELECT id FROM " + GLOBAL_db_used + ".subjects WHERE subjects.id < " + to_string((i + 1) * 100) + " AND subjects.id >= " + to_string(i * 100) + ";");
+        while (res->next()) {
+            kk++;
+            std::uniform_int_distribution<int> distr_points(0, 100);
+            //res = stmt->executeQuery("select id from djournal.subjects where subj_name = \"Введение в программирование и ЭВМ\" and term_id = 1;");
+            string le_query = "INSERT INTO " + GLOBAL_db_used + ".result_cells VALUES ('" + to_string(kk) + "', '" + to_string(id) + "', '" + res->getString("id") + "', '" + to_string(distr_points(gen)) + "', '0');";
+            //cout << le_query << endl;
+            stmt->execute(le_query);
+        }
+    }
+    delete stmt;
+    return;
+
 }
 
 void bot_update() {

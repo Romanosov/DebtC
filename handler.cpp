@@ -50,7 +50,7 @@ long long to_minutes(string data) {
     return duration_ms / 10000;
 }
 
-vector<stud_row> parse_default(string &json_data, string student_name) {
+vector<stud_row> * parse_default(string &json_data, string student_name) {
 
     GLOBAL_student_name = student_name;
 
@@ -58,7 +58,7 @@ vector<stud_row> parse_default(string &json_data, string student_name) {
 
     time_t theTime = time(NULL);
     struct tm *aTime = localtime(&theTime);
-    vector<stud_row> stud_marks_ready;
+    vector<stud_row> stud_marks_ready = * new vector<stud_row>();
     int study_year;
     string buffer_string;
     size_t found = 0;
@@ -74,7 +74,7 @@ vector<stud_row> parse_default(string &json_data, string student_name) {
     int m = 1;
     int h = 0;
 
-    stud_marks_ready = stud_vector_no_data(stud_marks_ready);
+    stud_marks_ready = * stud_vector_no_data(stud_marks_ready);
 
     while (m <= terms_amount / 2) {
         string grupk;
@@ -203,7 +203,7 @@ vector<stud_row> parse_default(string &json_data, string student_name) {
                 }
                 if (buffer_string != "") {
                     stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].complete_data = buffer_string;
-                    stud_marks_ready[current_term -1].results[k[current_term -1]].complete_time = to_minutes(buffer_string) - to_minutes(sem_date[7 - terms_amount + current_term].first);
+                    stud_marks_ready[current_term - 1].results[k[current_term - 1] - 1].complete_time = to_minutes(buffer_string) - to_minutes(sem_date[7 - terms_amount + current_term].first);
                     //cout << "DATE: " << buffer_string << endl;
                 }
             }
@@ -266,7 +266,7 @@ vector<stud_row> parse_default(string &json_data, string student_name) {
 
     GLOBAL_students_total += terms_amount;
 
-    return stud_marks_ready;
+    return &stud_marks_ready;
 }
 
 int get_year() {
@@ -289,13 +289,13 @@ bool marks_login_update(vector<stud_row> marks) {
 }
 
 
-vector<stud_row> stud_vector_no_data(vector<stud_row> clean_it) {
+vector<stud_row> * stud_vector_no_data(vector<stud_row> &clean_it) {
     for (int i = 0; i < clean_it.size(); i++) {
         for (int j = 0; j < 20; j++) {
             clean_it[i].results[j].has_data = false;
         }
     }
-    return clean_it;
+    return &clean_it;
 }
 
 void print_student_marks_default(std::vector<stud_row> stud_marks) {

@@ -18,7 +18,7 @@
 using namespace std;
 using namespace sql::mysql;
 
-bool marks_login_update_test(vector<stud_row> marks, int till) {
+bool marks_login_update_test(vector<stud_row> &marks, int till) {
     bool ok = true;
     for (int i = 0; i < till; i++) {
         for (int j = 0; j < 20; j++) {
@@ -32,7 +32,7 @@ bool marks_login_update_test(vector<stud_row> marks, int till) {
 }
 
 int main(int args_c, char* args[]) {
-    vector<stud_row> tte;
+    vector<stud_row> * tte = new vector<stud_row>();
     cout << "Hello, World!" << endl;
     int q_id = 0;
     string de_lg, de_ps;
@@ -50,7 +50,10 @@ int main(int args_c, char* args[]) {
         string bot_or_not = args[1];
         if (bot_or_not == "bot") {
             cout << "Creating a bot..." << endl;
-            //create_bot();
+            ctdd_connect("95.213.143.187", 3306, "u18489_rmnsv", "2A2rtQxbWYnU");
+            GLOBAL_db_used = "u18489_ctdd";
+            create_bot();
+            ctdd_disconnect();
             return 0;
         } else if (bot_or_not == "test") {
             cout << "This is a test. Get ready." << endl;
@@ -104,62 +107,19 @@ int main(int args_c, char* args[]) {
         exit(0);
     }
     cout << "Parse OK." << endl;
-    //new_student(tte, de_lg);
     cout << "Step 4/5. Updating the database." << endl;
-    cout << " ____________________________________________________________" << endl;
-    cout << "|0%_________________________50%__________________________100%|" << endl << "|";
-    size_t tsz = tte.size();
-    size_t tasks_left = tsz * 12;
-    //cout << tasks_left;
-
-    size_t kc = tasks_left;
-    size_t perc = 0;
-    size_t new_perc;
-    string done_progress = "";
-    for (int i = 0; i < tsz; i++) {
-        //cout << tte[i].name << endl;
-        //cout << tte[i].group << endl;
-        if (add_student(stoi(de_lg), tte[i].name, tte[i].group, tte[i].term)) {
-            tasks_left--;
-            new_perc = (kc - tasks_left) * 60 / kc;
-            if (new_perc > perc) {
-                perc = new_perc;
-            }
-            //cout << "TERM " << tte[i].term << endl;
-            bool ok = true;
-            for (int j = 0; j < 12; j++) {
-                //cout << "Are we here?" << endl;
-                bool add = tte[i].results[j].has_data;
-                int stud_id = tte[i].student_id;
-                //cout << "STUD ID: " << stud_id << endl;
-                int subj_id = tte[i].results[j].subj_id;
-                //cout << "SUBJ ID: "<< subj_id << endl;
-                double pnts = tte[i].results[j].points;
-                long long int ct = tte[i].results[j].complete_time;
-                //cout << add << " " << stud_id << " " << subj_id << " " << pnts << " " << ct << endl;
-                //cout << "Has?" << endl;
-                if (add) {
-                    //cout << "Has data!" << endl;
-                    if (!add_result(stud_id, subj_id, pnts, ct)) {
-                        ok = false;
-                    }
-                }
-                tasks_left--;
-                new_perc = (kc - tasks_left) * 60 / kc;
-                if (new_perc > perc) {
-                    perc = new_perc;
-                    cout << "$";
-                    cout.flush();
-                }
-            }
-        }
+    try {
+        new_student(* tte, de_lg);
+    } catch (const exception& e) {
+        cout << "Failed. Sorry." << endl;
     }
-    cout << "|" << endl << endl << "Done. Disconnecting..." << endl;
+    cout << endl << "Done! Disconnecting..." << endl;
     //print_student_marks_default(parse_default(json_data));
     //html_create_test(datas.second, parse_default(json_data, datas.second), 3);
     //html_print_term(datas.second, parse_default(json_data, datas.second), 4);
 
     ctdd_disconnect();
     cout << "Done?" << endl;
+    delete tte;
     return 0;
 }

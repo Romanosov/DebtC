@@ -18,10 +18,12 @@ struct result_cell {
     long long complete_time;
     std::string complete_data;
 
-    ~result_cell()
-    {
-        delete [] this;
-        cout << "CELL" << endl;
+    result_cell(){
+
+    }
+
+    ~result_cell() {
+        //cout << "CELL" << endl;
     }
 };
 
@@ -32,9 +34,11 @@ struct stud_row {
     std::string group;
     result_cell results[20];
 
+    stud_row() {
+    }
+
     ~stud_row() {
-        delete [] this;
-        cout << "?" << endl;
+        //cout << "?" << endl;
     }
 };
 
