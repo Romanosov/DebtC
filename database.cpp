@@ -210,7 +210,7 @@ void create_bot() {
     std::default_random_engine gen(rd());
     std::uniform_int_distribution<int> distr_term(2, 6);
     int terms = distr_term(gen);
-    int bb;
+    int bb = 0;
     string qr = "SELECT COUNT(*) FROM " + GLOBAL_db_used + ".students WHERE " + GLOBAL_db_used + ".students.is_real = '0';";
     res = stmt->executeQuery(qr);
     if (res->next())
@@ -246,16 +246,5 @@ void bot_update() {
     return;
 }
 
-result_cell get_result(int student_id, int subject_id) {
-    result_cell r_retuned;
-
-    return r_retuned;
-}
-
-stud_row get_all_the_line(int student_id) {
-    stud_row r_returned;
-
-    return r_returned;
-}
 
 std::vector<stud_row> get_all_the_students();

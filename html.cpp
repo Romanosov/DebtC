@@ -4,12 +4,18 @@
 #include "de.h"
 #include "global.h"
 #include <string>
+#include "database.h"
+#include <cppconn/resultset.h>
 
 //
 // Created by rmnsv on 19.09.16.
 //
 
 using namespace std;
+
+void html_print_top(std::vector<stud_row> printed, int term);
+
+void html_print_bottom(std::vector<stud_row> printed, int term);
 
 void html_print_term(string name, std::vector<stud_row> printed, int term) {
     int year = GLOBAL_year;
@@ -34,7 +40,8 @@ void html_print_term(string name, std::vector<stud_row> printed, int term) {
                    "  <tr style=\"border-bottom: 1px solid black;\">\n"
                    "    <th>Место</th>\n"
                    "    <th>Студент</th>\n");
-    for (int i = 0; i < 20; i++) {
+    //sql::ResultSet *res = get_term_results();
+    for (int i = 0; i < i; i++) {
         if (printed[term - 1].results[i].has_data) {
 
             printf("<th class=\"cell\">%s</th>\n", printed[term - 1].results[i].subj_name.substr(0, 6).c_str());

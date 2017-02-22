@@ -14,7 +14,7 @@ void init_sem_dates();
 
 long long to_minutes(std::string data);
 
-vector<stud_row> * parse_default(std::string &json_data, std::string student_name);
+vector<stud_row> parse_default(std::string &json_data, std::string student_name);
 
 void print_student_marks_default(std::vector<stud_row> stud_marks);
 

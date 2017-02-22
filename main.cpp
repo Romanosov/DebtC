@@ -101,7 +101,7 @@ int main(int args_c, char* args[]) {
     GLOBAL_students_total = how_many_students();
     cout << "Step 3/5. JSON parsing. I hate this job." << endl;
     try {
-        tte = parse_default(datas.first, datas.second);
+        *tte = parse_default(datas.first, datas.second);
     } catch (const exception&e) {
         cout << "Parsing failure. I'm out." << endl;
         exit(0);
@@ -119,7 +119,5 @@ int main(int args_c, char* args[]) {
     //html_print_term(datas.second, parse_default(json_data, datas.second), 4);
 
     ctdd_disconnect();
-    cout << "Done?" << endl;
-    delete tte;
     return 0;
 }

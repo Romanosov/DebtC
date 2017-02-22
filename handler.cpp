@@ -50,7 +50,7 @@ long long to_minutes(string data) {
     return duration_ms / 10000;
 }
 
-vector<stud_row> * parse_default(string &json_data, string student_name) {
+vector<stud_row> parse_default(string &json_data, string student_name) {
 
     GLOBAL_student_name = student_name;
 
@@ -266,7 +266,7 @@ vector<stud_row> * parse_default(string &json_data, string student_name) {
 
     GLOBAL_students_total += terms_amount;
 
-    return &stud_marks_ready;
+    return stud_marks_ready;
 }
 
 int get_year() {
