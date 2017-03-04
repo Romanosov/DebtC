@@ -34,7 +34,7 @@ void create_bot();
 
 void bot_update();
 
-vector <tuple<string, int, long long> > get_term_results(int term, string group);
+vector <tuple<string, int, double, long long> > get_term_results(int term);
 
 vector <pair <string, string> > get_term_subjects(int term);
 

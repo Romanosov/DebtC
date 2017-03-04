@@ -23,20 +23,12 @@ void html_print_term(string name, int term) {
     int year = GLOBAL_year;
     string define_filename = "./html/year" + to_string(year) + "_term" + to_string(term) + ".html";
     freopen(define_filename.c_str(), "w", stdout);
-    /*
-    int total = 0;
-    for (int trm = 1; trm < 9; trm++) {
-        get_term_subjects(term);
-        for (int grl = 4; grl < 10; grl++) {
-            string grp = "M3" + trm + '3' + grl;
-            get_term_results(term, grp);
-        }
-    }
-     */
     //make the upper part of the page.
 
     tuple<string, string, string, long long, string> last_suc = get_last_success(term);
     string last_suc_name;
+
+    //create the header of the table.
 
     printf("<!DOCTYPE html>\n"
                    "<html>\n"
@@ -62,16 +54,28 @@ void html_print_term(string name, int term) {
     }
     printf( "   <th class=\"eq\">=</th>\n"
                     "    <th class=\"time_col\">Время</th>\n");
-
-    //create the header of the table.
+    printf("</tr>\n");
 
     //if no results, do not do anything shitty.
 
-    //make the bottom of the page.
+    int total = sbs.size();
+    vector <tuple<string, int, double, long long> > tres = get_term_results(term);
 
+    //TODO: sorting
+
+    for (int i = 0; i < tres.size(); i++) {
+        string tmp1 = "<tr><td>" + to_string(i + 1) + "</td>";
+        printf(tmp1.c_str());
+        printf(get<0>(tres[i]).c_str());
+        printf("</tr>");
+    }
+
+
+    //make the bottom of the page.
+    /*
     printf("    <td>0</td>\n"
                    "    <td>0</td>\n"
-                   "  </tr>");
+                   "  </tr>"); */
     printf("  </tbody>\n"
                    "  </table>\n"
                    "</body>\n"

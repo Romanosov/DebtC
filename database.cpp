@@ -246,11 +246,38 @@ void bot_update() {
     return;
 }
 
-vector <tuple<string, int, long long> > get_term_results(int term, string group) {
-    vector<tuple<string, int, long long> > term_res;
+vector <tuple<string, int, double, long long> > get_term_results(int term) {
+    vector<tuple<string, int, double, long long> > term_res;
     stmt = con->createStatement();
-    res = stmt->executeQuery("select students.full_name, students.group, subjects.subj_name, subjects.subj_short, result_cells.points, result_cells.change_time from " + GLOBAL_db_used + "subjects inner join " + GLOBAL_db_used + ".result_cells on subjects.id = result_cells.subject_id inner join " + GLOBAL_db_used + ".students on students.id = result_cells.student_id where subject_id >= " + to_string(term) + "00 and subject_id < " + to_string(term + 1) + "00 order by students.id, subjects.id;");
+    res = stmt->executeQuery("select students.full_name, students.group, subjects.id, subjects.subj_name, subjects.is_exam, result_cells.points, result_cells.change_time from " + GLOBAL_db_used + ".subjects inner join " + GLOBAL_db_used + ".result_cells on subjects.id = result_cells.subject_id inner join " + GLOBAL_db_used + ".students on students.id = result_cells.student_id where subject_id >= " + to_string(term) + "00 and subject_id < " + to_string(term + 1) + "00 order by students.id, subjects.id;");
+    string formed = "";
+    double total_points = 0;
+    int total_subjs = 0;
+    long long total_time = 0;
+    int prev_subj_id = 0;
     res->next();
+    formed = "<td class=\"stud\">" + res->getString("full_name") + "</td>\n";
+    res->previous();
+    while (res->next()) {
+        if (res->getInt("id") < prev_subj_id) {
+            formed += "<td>" + to_string(total_subjs) + "</td>\n<td>" + to_string(total_time) + "</td>\n";
+            //cout << formed << endl;
+            term_res.push_back(make_tuple(formed, total_subjs, total_points, total_time));
+            formed = "<td class=\"stud\">" + res->getString("full_name") + "</td>\n";
+            total_points = 0;
+            total_subjs = 0;
+            total_time = 0;
+        }
+        prev_subj_id = res->getInt("id");
+        double cur_points = res->getDouble("points");
+        pair<char, string> ress = get_mark(cur_points, res->getBoolean("is_exam"));
+        formed += "<td class=\"subj_" + ress.second +"\">" + ress.first + "<p class=\"cell_time\">" + res->getString("change_time") + ":00</p></td>\n";
+        if (cur_points >= 60)
+            total_subjs++;
+        total_points += cur_points;
+    }
+
+
 
     return term_res;
 }

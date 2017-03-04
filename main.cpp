@@ -50,8 +50,10 @@ int main(int args_c, char* args[]) {
         string bot_or_not = args[1];
         if (bot_or_not == "bot") {
             cout << "Creating a bot..." << endl;
-            ctdd_connect("95.213.143.187", 3306, "u18489_rmnsv", "2A2rtQxbWYnU");
-            GLOBAL_db_used = "u18489_ctdd";
+            //ctdd_connect("95.213.143.187", 3306, "u18489_rmnsv", "2A2rtQxbWYnU");
+            ctdd_connect("localhost", 3306, "root", "");
+            //GLOBAL_db_used = "u18489_ctdd";
+            GLOBAL_db_used = "djournal";
             create_bot();
             ctdd_disconnect();
             return 0;
@@ -122,7 +124,6 @@ int main(int args_c, char* args[]) {
     html_print_term(GLOBAL_student_name, 3);
     html_print_term(GLOBAL_student_name, 4);
     html_print_term(GLOBAL_student_name, 5);
-    html_print_term(GLOBAL_student_name, 6);
     cout << endl << "Done! Disconnecting..." << endl;
     //print_student_marks_default(parse_default(json_data));
     //html_create_test(datas.second, parse_default(json_data, datas.second), 3);
