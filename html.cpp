@@ -17,59 +17,61 @@ void html_print_top(std::vector<stud_row> printed, int term);
 
 void html_print_bottom(std::vector<stud_row> printed, int term);
 
-void html_print_term(string name, std::vector<stud_row> printed, int term) {
+void html_print_term(string name, int term) {
+    //Get tuples with results
+
     int year = GLOBAL_year;
     string define_filename = "./html/year" + to_string(year) + "_term" + to_string(term) + ".html";
     freopen(define_filename.c_str(), "w", stdout);
+    /*
     int total = 0;
+    for (int trm = 1; trm < 9; trm++) {
+        get_term_subjects(term);
+        for (int grl = 4; grl < 10; grl++) {
+            string grp = "M3" + trm + '3' + grl;
+            get_term_results(term, grp);
+        }
+    }
+     */
+    //make the upper part of the page.
+
+    tuple<string, string, string, long long, string> last_suc = get_last_success(term);
+    string last_suc_name;
+
     printf("<!DOCTYPE html>\n"
                    "<html>\n"
                    "<head>\n"
-                   "  <title>DebtC year2014</title>\n"
+                   "  <title>DebtC year%d</title>\n"
                    "  <meta charset=\"UTF-8\">\n"
                    "  <link rel=\"stylesheet\" type=\"text/css\" href=\"./style.css\">\n"
                    "</head>\n"
                    "<body>\n"
                    "  <p>DebtC by rmnsv</p>\n"
-                   "  <h2><p>%d курс (year%d). %d семестр.</p></h2>\n", term / 2, year, term);
-    printf("  <p>В ПРОЦЕССЕ: 162720:00 из 214560:00</p>\n"
+                   "  <h2><p>%d курс (year%d). %d семестр.</p></h2>\n"
+                   "  <p>В ПРОЦЕССЕ: 162720:00 из 214560:00</p>\n"
                    "  <p>СЕССИЯ: 0:00 из 43200:00</p>\n"
-                   "  <p>Последняя успешная сдача: Гончар А. В., Автоматное программирование, 15.01.2016 (NULL), зачёт<br><br></p>\n"
+                   "  <p>Последняя успешная сдача: %s (%s), %s, %lld, %s<br><br></p>\n"
                    "  <table align=\"center\">\n"
                    "  <tbody>\n"
                    "  <tr style=\"border-bottom: 1px solid black;\">\n"
                    "    <th>Место</th>\n"
-                   "    <th>Студент</th>\n");
-    //sql::ResultSet *res = get_term_results();
-    for (int i = 0; i < i; i++) {
-        if (printed[term - 1].results[i].has_data) {
-
-            printf("<th class=\"cell\">%s</th>\n", printed[term - 1].results[i].subj_name.substr(0, 6).c_str());
-            if (printed[term - 1].results[i].points >= 60) {
-                total++;
-            }
-        } else {
-
-        }
+                   "    <th>Студент</th>\n", GLOBAL_year, ((term - 1) / 2) + 1, GLOBAL_year, term, get<0>(last_suc).c_str(), get<1>(last_suc).c_str(), get<2>(last_suc).c_str(), get<3>(last_suc), get<4>(last_suc).c_str());
+    vector <pair<string, string> > sbs = get_term_subjects(term);
+    for (int i = 0; i < sbs.size(); i++) {
+        printf("<th class=\"cell\">%s</th>\n", sbs[i].first.c_str());
     }
     printf( "   <th class=\"eq\">=</th>\n"
-                    "    <th class=\"time_col\">Время</th>\n"
-                    "  </tr>\n"
-                    "  <tr>\n"
-                    "    <td>1</td>\n"
-                    "    <td class=\"stud\">%s</td>\n", name.c_str());
-    for (int i = 0; i < 20; i++) {
-        if (printed[term - 1].results[i].has_data) {
-            pair<char, string> got_mark = get_mark(printed[term - 1].results[i].points, printed[term - 1].results[i].is_exam);
-            string x = "";
-            if (got_mark.first == 'F')
-                x = "X";
-            printf("<td class=\"subj_%s\">%c%s</td>\n", got_mark.second.c_str(), got_mark.first, x.c_str());
-        }
-    }
-    printf("    <td>%d</td>\n"
+                    "    <th class=\"time_col\">Время</th>\n");
+
+    //create the header of the table.
+
+    //if no results, do not do anything shitty.
+
+    //make the bottom of the page.
+
+    printf("    <td>0</td>\n"
                    "    <td>0</td>\n"
-                   "  </tr>", total);
+                   "  </tr>");
     printf("  </tbody>\n"
                    "  </table>\n"
                    "</body>\n"

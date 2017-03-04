@@ -7,6 +7,7 @@
 #define DEBTC_DATABASE_H
 
 
+#include <tuple>
 #include "handler.h"
 
 std::string test_query(std::string query);
@@ -32,6 +33,12 @@ int add_bot(int bot_num, int term);
 void create_bot();
 
 void bot_update();
+
+vector <tuple<string, int, long long> > get_term_results(int term, string group);
+
+vector <pair <string, string> > get_term_subjects(int term);
+
+tuple<string, string, string, long long, string> get_last_success(int term);
 
 result_cell get_result(int student_id, int subject_id);
 

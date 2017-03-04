@@ -89,9 +89,11 @@ int main(int args_c, char* args[]) {
     //cout << json_data << endl;
     cout << "Step 2/5. Connecting to database at 95.213.143.187... Wait." << endl;
     try {
-        ctdd_connect("95.213.143.187", 3306, "u18489_rmnsv", "2A2rtQxbWYnU");
+        //ctdd_connect("95.213.143.187", 3306, "u18489_rmnsv", "2A2rtQxbWYnU");
+        ctdd_connect("localhost", 3306, "root", "");
         cout << "Connect OK." << endl;
-        GLOBAL_db_used = "u18489_ctdd";
+        //GLOBAL_db_used = "u18489_ctdd";
+        GLOBAL_db_used = "djournal";
     } catch (const exception& e) {
         cout << "Database connect error. That's all I know. Bye." << endl;
         exit(0);
@@ -113,6 +115,14 @@ int main(int args_c, char* args[]) {
     } catch (const exception& e) {
         cout << "Failed. Sorry." << endl;
     }
+
+    cout << "Step 5/5. Updating HTML. Test mode." << endl;
+    html_print_term(GLOBAL_student_name, 1);
+    html_print_term(GLOBAL_student_name, 2);
+    html_print_term(GLOBAL_student_name, 3);
+    html_print_term(GLOBAL_student_name, 4);
+    html_print_term(GLOBAL_student_name, 5);
+    html_print_term(GLOBAL_student_name, 6);
     cout << endl << "Done! Disconnecting..." << endl;
     //print_student_marks_default(parse_default(json_data));
     //html_create_test(datas.second, parse_default(json_data, datas.second), 3);

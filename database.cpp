@@ -246,5 +246,42 @@ void bot_update() {
     return;
 }
 
+vector <tuple<string, int, long long> > get_term_results(int term, string group) {
+    vector<tuple<string, int, long long> > term_res;
+    stmt = con->createStatement();
+    res = stmt->executeQuery("select students.full_name, students.group, subjects.subj_name, subjects.subj_short, result_cells.points, result_cells.change_time from " + GLOBAL_db_used + "subjects inner join " + GLOBAL_db_used + ".result_cells on subjects.id = result_cells.subject_id inner join " + GLOBAL_db_used + ".students on students.id = result_cells.student_id where subject_id >= " + to_string(term) + "00 and subject_id < " + to_string(term + 1) + "00 order by students.id, subjects.id;");
+    res->next();
+
+    return term_res;
+}
+
+vector <pair <string, string> > get_term_subjects(int term) {
+    vector <pair <string, string> > ts;
+    stmt = con->createStatement();
+    res = stmt->executeQuery("select subjects.subj_name, subjects.subj_short from " + GLOBAL_db_used + ".subjects where subjects.id >= " + to_string(term) + "00 and subjects.id < " + to_string(term + 1) + "00;");
+    while (res->next()) {
+        string fff = res->getString("subj_short");
+        string sss = res->getString("subj_name");
+        ts.push_back(make_pair(fff, sss));
+    }
+    return ts;
+}
+
+tuple<string, string, string, long long, string> get_last_success(int term) {
+    stmt = con->createStatement();
+    res = stmt->executeQuery("select students.full_name, students.group, subjects.subj_name, result_cells.points, subjects.is_exam, result_cells.change_time from " + GLOBAL_db_used + ".subjects inner join " + GLOBAL_db_used + ".result_cells on subjects.id = result_cells.subject_id inner join " + GLOBAL_db_used + ".students on students.id = result_cells.student_id where (subject_id >= " + to_string(term) + "00 and subject_id < " + to_string(term + 1) + "00 and result_cells.points >= 60 and result_cells.change_time > 1000000) order by result_cells.change_time desc limit 1;");
+    res->next();
+    string mrk = get_mark(res->getDouble("points"), res->getBoolean("is_exam")).second;
+    if (mrk == "A")
+        mrk = "отл. A";
+    if (mrk == "B" || mrk == "C")
+        mrk = "хор. " + mrk;
+    if (mrk == "D" || mrk == "E")
+        mrk = "удовл. " + mrk;
+    if (mrk == "ok")
+        mrk = "зачёт";
+    tuple<string, string, string, long long, string> tp = make_tuple(res->getString("full_name"), res->getString("group"), res->getString("subj_name"), res->getInt("change_time"), mrk);
+    return tp;
+}
 
 std::vector<stud_row> get_all_the_students();
